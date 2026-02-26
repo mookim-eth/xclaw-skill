@@ -45,13 +45,14 @@ function slimTweets(rawData, limit = 15) {
     const items = Array.isArray(rawData) ? rawData : (rawData.items || []);
     return items.slice(0, limit).map(item => {
         const t = item.tweet || item;
+        const info = item.info || t.info || {};
         return {
             rank: item.rank || 'N/A',
-            author: t.profile ? t.profile.name : (t.username || 'Unknown'),
-            handle: t.profile ? t.profile.username : (t.username || 'Unknown'),
-            summary: t.ai ? t.ai.summary_cn : (t.text ? t.text.substring(0, 150) : 'No content'),
+            author: t.profile ? t.profile.name : (t.username || 'KOL'),
+            summary: t.ai ? t.ai.summary_cn : (info.html ? info.html.replace(/<[^>]*>?/gm, '').substring(0, 150) : (t.text ? t.text.substring(0, 150) : 'No content')),
             engagement: t.statistic ? `❤️${t.statistic.likes} 🔁${t.statistic.retweet_count}` : 'N/A',
-            link: t.link
+            time: t.create_time || t.created_at,
+            link: t.link || `https://x.com/i/status/${t.id}`
         };
     });
 }
@@ -88,6 +89,15 @@ async function main() {
                 tweets: slimTweets(result, 15)
             }, null, 2));
 
+        } else if (command === 'ghost' || command === 'deleted') {
+            const handle = args[1].replace('@', '');
+            console.log(`[XClaw] Sniffing deleted tweets for: @${handle}...`);
+            const result = await requestXClaw('/tweet/deleted_tweets', 'POST', { handle: handle });
+            console.log(JSON.stringify({
+                info: `Ghost Analysis (Deleted Tweets) for @${handle}`,
+                deleted_tweets: slimTweets(result, 10)
+            }, null, 2));
+
         } else if (command === 'detail') {
             const tweetId = args[1].includes('/') ? args[1].split('/').pop().split('?')[0] : args[1];
             const res = await requestXClaw('/tweet/tweet_detail', 'POST', { tweet_id: tweetId });
@@ -103,13 +113,12 @@ async function main() {
             const rawData = await requestXClaw('/tweet/hot_tweets', 'POST', payload);
             const top5 = slimTweets(rawData, 5);
             console.log(JSON.stringify({
-                instruction: `Based on these Top 5 viral topics in ${group} (${tag || 'all'}), create 3 diverse tweet drafts (Tech, Sentiment, Alpha). Include original links for quoting.`,
-                data_source: `CryptoHunt Real-time Hot Tweets (${hours}h)`,
+                instruction: `Based on these Top 5 viral topics, create 3 diverse tweet drafts.`,
                 topics: top5
             }, null, 2));
 
         } else {
-            console.log("Usage: node xclaw.js <hot|analyze|detail|draft> <params>");
+            console.log("Usage: node xclaw.js <hot|analyze|ghost|detail|draft> <params>");
         }
     } catch (error) {
         console.error("Failed:", error.message);

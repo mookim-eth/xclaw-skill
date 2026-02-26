@@ -1,7 +1,6 @@
 ---
 name: xclaw
-description: Official XClaw Intelligence Skill. Provides real-time trending tweets, KOL deep analysis, and live user crawling powered by CryptoHunt.
-homepage: https://pro.cryptohunt.ai
+description: XClaw Intelligence Skill. Provides real-time trending tweets, KOL deep analysis, live user crawling, and deleted tweet sniffing.
 allowed-tools: Bash(node:*) Read Write
 metadata:
   {
@@ -28,19 +27,22 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 ### 2. KOL Insight & Mirroring (`xclaw_analyze`)
 - **Action**: Fetches tweets from the internal KOL database with a **real-time crawl** fallback for new users.
 
-### 3. Tweet Deep Dive (`xclaw_detail`)
+### 3. Ghost Analysis (`xclaw_ghost`)
+- **Action**: Sniff out tweets that have been **deleted** by a specific user.
+- **Logic**: Use this to find retracted statements, hidden Alpha, or "oops" moments from top KOLs.
+
+### 4. Tweet Deep Dive (`xclaw_detail`)
 - **Action**: Fetches full content, metrics (likes, bookmarks, views), and thread data for a specific tweet URL or ID.
 
-### 4. Smart Content Ideation (`xclaw_draft`)
-- **Action**: Fetch the Top 5 viral topics tailored by region and tag to generate high-conversion tweet drafts.
-- **Quote Support**: Provides original tweet links to enable Native Quote/Reply functionality on X.
+### 5. Smart Content Ideation (`xclaw_draft`)
+- **Action**: Fetch viral topics tailored by region and tag to generate high-conversion tweet drafts with original links.
 
 ## User Commands for Agent
-- "xclaw find hot": Get the last 4h of Chinese crypto hot tweets.
-- "xclaw find hot in global for AI": Targeted search for global AI trends.
+- "xclaw find hot": Get the last 24h of Chinese crypto hot tweets.
 - "xclaw analyze <username>": Deep dive into a specific person's recent output.
+- "xclaw ghost <username>": See what @username tried to delete.
 - "xclaw detail <URL_or_ID>": Fetch all details and stats for a specific tweet.
-- "xclaw draft <hours> <group> <tag>": Automatically fetch viral hooks and suggest 3 diverse tweet versions with original links.
+- "xclaw draft": Automatically fetch viral hooks and suggest 3 tweet versions.
 
 ---
 *CryptoHunt Intelligence - Data for Creators.*
