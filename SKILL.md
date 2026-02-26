@@ -1,7 +1,13 @@
 ---
 name: xclaw
-description: XClaw Intelligence Skill. Provides real-time trending tweets, KOL deep analysis, and live user crawling.
+description: Official XClaw Intelligence Skill. Provides real-time trending tweets, KOL deep analysis, and live user crawling powered by CryptoHunt.
+homepage: https://pro.cryptohunt.ai
 allowed-tools: Bash(node:*) Read Write
+metadata:
+  {
+    "openclaw": { "requires": { "env": ["CRYPTOHUNT_API_KEY"] } },
+    "homepage": "https://pro.cryptohunt.ai"
+  }
 ---
 
 # Skill: XClaw Intelligence 🚀
@@ -30,7 +36,7 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 - **Quote Support**: Provides original tweet links to enable Native Quote/Reply functionality on X.
 
 ## User Commands for Agent
-- "xclaw find hot": Get the last 24h of Chinese crypto hot tweets.
+- "xclaw find hot": Get the last 4h of Chinese crypto hot tweets.
 - "xclaw find hot in global for AI": Targeted search for global AI trends.
 - "xclaw analyze <username>": Deep dive into a specific person's recent output.
 - "xclaw detail <URL_or_ID>": Fetch all details and stats for a specific tweet.
