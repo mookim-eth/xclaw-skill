@@ -17,7 +17,10 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 
 ### 1. Trending Discovery (`xclaw_hot`)
 - **Action**: Fetch the top performing tweets in the last 1/4/24 hours.
-- **Logic**: Use it to suggest content ideas based on real engagement data.
+- **Multi-Dimensional Filtering**:
+    - **By Region/Language**: Support for `cn` (Chinese) and `global` (English/Global) regions.
+    - **By Category/Topic**: Filter by specific tags (e.g., `crypto`, `AI`, `ethereum`, `meme`).
+- **Logic**: Use targeted discovery to suggest content ideas based on real-time engagement data within specific niches.
 
 ### 2. KOL Insight & Mirroring (`xclaw_analyze`)
 - **Action**: Fetches tweets from the internal KOL database. 
@@ -29,6 +32,7 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 
 ## User Commands for Agent
 - "xclaw find hot": Get the last 4h of Chinese crypto hot tweets.
+- "xclaw find hot in global for AI": Targeted search for global AI trends.
 - "xclaw analyze <username>": Deep dive into a specific person's recent output.
 - "xclaw detail <URL_or_ID>": Fetch all details and stats for a specific tweet.
 - "xclaw draft": Create a viral tweet draft based on the latest XClaw trending data.
