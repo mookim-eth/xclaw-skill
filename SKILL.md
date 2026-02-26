@@ -17,23 +17,24 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 
 ### 1. Trending Discovery (`xclaw_hot`)
 - **Action**: Fetch the top performing tweets in the last 1/4/24 hours.
-- **Multi-Dimensional Filtering**: Support for region (`cn`/`global`) and tags (e.g., `AI`, `meme`).
+- **Multi-Dimensional Filtering**: Support for region (`cn`/`global`) and tags (e.g., `AI`, `meme`, `ethereum`).
 
 ### 2. KOL Insight & Mirroring (`xclaw_analyze`)
 - **Action**: Fetches tweets from the internal KOL database with a **real-time crawl** fallback for new users.
 
 ### 3. Tweet Deep Dive (`xclaw_detail`)
-- **Action**: Fetches full content, metrics, and thread data for a specific tweet.
+- **Action**: Fetches full content, metrics (likes, bookmarks, views), and thread data for a specific tweet URL or ID.
 
-### 4. Smart Drafting (`xclaw_draft`)
-- **Action**: Specifically prepares the Top 5 viral topics for the Agent to generate high-conversion tweet drafts.
-- **Usage**: When the user wants to "create content", "get some ideas", or "write a draft".
+### 4. Smart Content Ideation (`xclaw_draft`)
+- **Action**: Fetch the Top 5 viral topics tailored by region and tag to generate high-conversion tweet drafts.
+- **Quote Support**: Provides original tweet links to enable Native Quote/Reply functionality on X.
 
 ## User Commands for Agent
-- "xclaw find hot": Get the last 4h of Chinese crypto hot tweets.
+- "xclaw find hot": Get the last 24h of Chinese crypto hot tweets.
+- "xclaw find hot in global for AI": Targeted search for global AI trends.
 - "xclaw analyze <username>": Deep dive into a specific person's recent output.
 - "xclaw detail <URL_or_ID>": Fetch all details and stats for a specific tweet.
-- "xclaw draft": Automatically fetch the best viral hooks and suggest 3 tweet versions.
+- "xclaw draft <hours> <group> <tag>": Automatically fetch viral hooks and suggest 3 diverse tweet versions with original links.
 
 ---
 *CryptoHunt Intelligence - Data for Creators.*

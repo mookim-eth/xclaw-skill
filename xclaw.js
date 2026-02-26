@@ -88,31 +88,28 @@ async function main() {
                 tweets: slimTweets(result, 15)
             }, null, 2));
 
-        } else if (command === 'crawl') {
-            const username = args[1].replace('@', '');
-            const result = await requestXClaw('/tweet/user_tweets', 'POST', { username });
-            console.log(JSON.stringify({
-                info: `Real-time crawl for @${username}`,
-                tweets: slimTweets(result, 15)
-            }, null, 2));
-
         } else if (command === 'detail') {
             const tweetId = args[1].includes('/') ? args[1].split('/').pop().split('?')[0] : args[1];
             const res = await requestXClaw('/tweet/tweet_detail', 'POST', { tweet_id: tweetId });
             console.log(JSON.stringify(res, null, 2));
 
         } else if (command === 'draft') {
-            // Special helper for the Agent to get context for drafting
-            const rawData = await requestXClaw('/tweet/hot_tweets', 'POST', { hours: 24, group: 'cn' });
+            const hours = parseInt(args[1]) || 24;
+            const group = args[2] || 'cn';
+            const tag = args[3] || null;
+            const payload = { hours, group };
+            if (tag) payload.tag = tag;
+
+            const rawData = await requestXClaw('/tweet/hot_tweets', 'POST', payload);
             const top5 = slimTweets(rawData, 5);
             console.log(JSON.stringify({
-                instruction: "Based on these Top 5 viral topics, create 3 diverse tweet drafts (Tech, Sentiment, Alpha).",
-                data_source: "CryptoHunt Real-time Hot Tweets (24h, CN)",
+                instruction: `Based on these Top 5 viral topics in ${group} (${tag || 'all'}), create 3 diverse tweet drafts (Tech, Sentiment, Alpha). Include original links for quoting.`,
+                data_source: `CryptoHunt Real-time Hot Tweets (${hours}h)`,
                 topics: top5
             }, null, 2));
 
         } else {
-            console.log("Usage: node xclaw.js <hot|analyze|crawl|detail|draft> <params>");
+            console.log("Usage: node xclaw.js <hot|analyze|detail|draft> <params>");
         }
     } catch (error) {
         console.error("Failed:", error.message);
