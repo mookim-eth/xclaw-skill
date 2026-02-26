@@ -1,11 +1,11 @@
 
 const http = require('https');
 
-const API_KEY = process.env.XHUNT_API_KEY;
+const API_KEY = process.env.CRYPTOHUNT_API_KEY;
 const BASE_URL = 'pro.cryptohunt.ai';
 
 if (!API_KEY) {
-    console.error("Error: XHUNT_API_KEY is missing.");
+    console.error("Error: CRYPTOHUNT_API_KEY environment variable is missing.");
     process.exit(1);
 }
 

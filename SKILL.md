@@ -1,15 +1,15 @@
 ---
 name: xclaw
-description: XClaw Intelligence Skill (Powered by XHunt). Provides real-time trending tweets, KOL deep analysis, and live user crawling.
+description: XClaw Intelligence Skill. Provides real-time trending tweets, KOL deep analysis, and live user crawling.
 allowed-tools: Bash(node:*) Read Write
 ---
 
 # Skill: XClaw Intelligence 🚀
 
-XClaw is the premier intelligence layer for OpenClaw creators, powered by the XHunt real-time data engine.
+XClaw is the premier intelligence layer for OpenClaw creators, providing real-time social data and insights from the CryptoHunt engine.
 
 ## Prerequisites
-- **API Key Required**: Set `XHUNT_API_KEY` in your environment.
+- **API Key Required**: Set `CRYPTOHUNT_API_KEY` in your environment.
 - **Get your Key**: Purchase or register for an API key at [apidashboard.cryptohunt.ai](https://apidashboard.cryptohunt.ai).
 - **Official API Docs**: Detailed endpoint documentation can be found at [pro.cryptohunt.ai](https://pro.cryptohunt.ai).
 
@@ -34,4 +34,4 @@ XClaw is the premier intelligence layer for OpenClaw creators, powered by the XH
 - "xclaw draft": Create a viral tweet draft based on the latest XClaw trending data.
 
 ---
-*Powered by XHunt Intelligence - From KOLs, for KOLs.*
+*CryptoHunt Intelligence - Data for Creators.*
