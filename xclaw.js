@@ -41,15 +41,16 @@ function requestXClaw(path, method, body) {
     });
 }
 
-function slimTweets(rawData) {
+function slimTweets(rawData, limit = 15) {
     const items = Array.isArray(rawData) ? rawData : (rawData.items || []);
-    return items.map(item => {
+    return items.slice(0, limit).map(item => {
         const t = item.tweet || item;
         return {
-            author: t.profile ? t.profile.name : 'Unknown',
+            rank: item.rank || 'N/A',
+            author: t.profile ? t.profile.name : (t.username || 'Unknown'),
+            handle: t.profile ? t.profile.username : (t.username || 'Unknown'),
             summary: t.ai ? t.ai.summary_cn : (t.text ? t.text.substring(0, 150) : 'No content'),
             engagement: t.statistic ? `❤️${t.statistic.likes} 🔁${t.statistic.retweet_count}` : 'N/A',
-            time: t.create_time || t.created_at,
             link: t.link
         };
     });
@@ -69,8 +70,8 @@ async function main() {
 
             const rawData = await requestXClaw('/tweet/hot_tweets', 'POST', payload);
             console.log(JSON.stringify({
-                info: `Top hot tweets`,
-                trending: slimTweets(rawData).slice(0, 20)
+                info: `Top hot tweets (${hours}h, ${group}${tag ? ', ' + tag : ''})`,
+                trending: slimTweets(rawData, 20)
             }, null, 2));
 
         } else if (command === 'analyze') {
@@ -84,7 +85,7 @@ async function main() {
             }
             console.log(JSON.stringify({
                 info: `Analysis for @${username}`,
-                tweets: slimTweets(result)
+                tweets: slimTweets(result, 15)
             }, null, 2));
 
         } else if (command === 'crawl') {
@@ -92,7 +93,7 @@ async function main() {
             const result = await requestXClaw('/tweet/user_tweets', 'POST', { username });
             console.log(JSON.stringify({
                 info: `Real-time crawl for @${username}`,
-                tweets: slimTweets(result)
+                tweets: slimTweets(result, 15)
             }, null, 2));
 
         } else if (command === 'detail') {
@@ -100,8 +101,18 @@ async function main() {
             const res = await requestXClaw('/tweet/tweet_detail', 'POST', { tweet_id: tweetId });
             console.log(JSON.stringify(res, null, 2));
 
+        } else if (command === 'draft') {
+            // Special helper for the Agent to get context for drafting
+            const rawData = await requestXClaw('/tweet/hot_tweets', 'POST', { hours: 24, group: 'cn' });
+            const top5 = slimTweets(rawData, 5);
+            console.log(JSON.stringify({
+                instruction: "Based on these Top 5 viral topics, create 3 diverse tweet drafts (Tech, Sentiment, Alpha).",
+                data_source: "CryptoHunt Real-time Hot Tweets (24h, CN)",
+                topics: top5
+            }, null, 2));
+
         } else {
-            console.log("Usage: node xclaw.js <hot|analyze|crawl|detail> <params>");
+            console.log("Usage: node xclaw.js <hot|analyze|crawl|detail|draft> <params>");
         }
     } catch (error) {
         console.error("Failed:", error.message);

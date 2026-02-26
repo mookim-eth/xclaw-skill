@@ -17,25 +17,23 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 
 ### 1. Trending Discovery (`xclaw_hot`)
 - **Action**: Fetch the top performing tweets in the last 1/4/24 hours.
-- **Multi-Dimensional Filtering**:
-    - **By Region/Language**: Support for `cn` (Chinese) and `global` (English/Global) regions.
-    - **By Category/Topic**: Filter by specific tags (e.g., `crypto`, `AI`, `ethereum`, `meme`).
-- **Logic**: Use targeted discovery to suggest content ideas based on real-time engagement data within specific niches.
+- **Multi-Dimensional Filtering**: Support for region (`cn`/`global`) and tags (e.g., `AI`, `meme`).
 
 ### 2. KOL Insight & Mirroring (`xclaw_analyze`)
-- **Action**: Fetches tweets from the internal KOL database. 
-- **Smart Fallback**: If the user is not found in the tracked list, it automatically triggers a **real-time crawl** of the user's latest profile.
+- **Action**: Fetches tweets from the internal KOL database with a **real-time crawl** fallback for new users.
 
 ### 3. Tweet Deep Dive (`xclaw_detail`)
-- **Action**: Fetches full content, metrics (likes, retweets), and thread data for a specific tweet.
-- **Usage**: When a specific URL or Tweet ID is provided for analysis.
+- **Action**: Fetches full content, metrics, and thread data for a specific tweet.
+
+### 4. Smart Drafting (`xclaw_draft`)
+- **Action**: Specifically prepares the Top 5 viral topics for the Agent to generate high-conversion tweet drafts.
+- **Usage**: When the user wants to "create content", "get some ideas", or "write a draft".
 
 ## User Commands for Agent
 - "xclaw find hot": Get the last 4h of Chinese crypto hot tweets.
-- "xclaw find hot in global for AI": Targeted search for global AI trends.
 - "xclaw analyze <username>": Deep dive into a specific person's recent output.
 - "xclaw detail <URL_or_ID>": Fetch all details and stats for a specific tweet.
-- "xclaw draft": Create a viral tweet draft based on the latest XClaw trending data.
+- "xclaw draft": Automatically fetch the best viral hooks and suggest 3 tweet versions.
 
 ---
 *CryptoHunt Intelligence - Data for Creators.*
