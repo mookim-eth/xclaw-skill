@@ -78,12 +78,15 @@ function pickFirst(...values) {
     return null;
 }
 
-function normalizeSocialAction(action) {
+function normalizeSocialAction(action, options = {}) {
     const a = action || {};
     const target = a.target || a.user || a.profile || {};
+    const preferredIdField = options.preferredIdField || null;
 
     const targetId = pickFirst(
+        preferredIdField ? a[preferredIdField] : null,
         a.target_user_id, a.followed_user_id, a.unfollowed_user_id, a.to_user_id,
+        a.following_id, a.follower_id,
         target.id, target.user_id, a.user_id, a.uid, a.id
     );
 
@@ -138,12 +141,26 @@ async function fetchProfileById(userId) {
     return null;
 }
 
-async function enrichSocialActions(actions) {
+async function enrichSocialActions(actions, usersMap = {}, options = {}) {
     const list = Array.isArray(actions) ? actions : [];
-    const normalized = list.map(normalizeSocialAction);
+    const normalized = list.map(item => normalizeSocialAction(item, options));
     const cache = new Map();
 
-    const idsToResolve = [...new Set(normalized.map(x => x.target_id).filter(Boolean))];
+    // 1) 优先使用同一 API 返回中的 twitter_users（最准确也最快）
+    Object.entries(usersMap || {}).forEach(([id, user]) => {
+        const root = user || {};
+        const profile = root.profile || {};
+        const handle = pickFirst(root.username, profile.username, root.username_raw, profile.username_raw);
+        const name = pickFirst(root.name, profile.name, profile.nickname);
+        if (handle || name) {
+            cache.set(String(id), { id: String(id), handle, name });
+        }
+    });
+
+    // 2) 对仍缺失的信息再按 ID 兜底查询
+    const idsToResolve = [...new Set(normalized.map(x => x.target_id).filter(Boolean))]
+        .filter(id => !cache.has(String(id)));
+
     await Promise.all(idsToResolve.map(async (id) => {
         const profile = await fetchProfileById(id);
         if (profile) cache.set(String(id), profile);
@@ -218,12 +235,15 @@ async function main() {
                 const follows = await requestXClaw('/social/follow_relation', 'POST', { handle });
                 const unfollows = await requestXClaw('/social/unfollow_relation', 'POST', { handle });
 
-                const followActions = follows.followed_action || follows.data || [];
-                const unfollowActions = unfollows.unfollowing_action || unfollows.data || [];
+                const followActions = follows.following_action || follows.followed_action || follows.data || [];
+                const unfollowActions = unfollows.unfollowing_action || unfollows.unfollowed_action || unfollows.data || [];
+
+                const followUsers = follows.twitter_users || {};
+                const unfollowUsers = unfollows.twitter_users || {};
 
                 const [recentFollowing, recentUnfollowing] = await Promise.all([
-                    enrichSocialActions(followActions),
-                    enrichSocialActions(unfollowActions)
+                    enrichSocialActions(followActions, followUsers, { preferredIdField: 'following_id' }),
+                    enrichSocialActions(unfollowActions, unfollowUsers, { preferredIdField: 'following_id' })
                 ]);
 
                 console.log(JSON.stringify({ 
