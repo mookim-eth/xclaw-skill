@@ -5,7 +5,8 @@ allowed-tools: Bash(node:*) Read Write
 metadata:
   {
     "openclaw": { "requires": { "env": ["CRYPTOHUNT_API_KEY"] } },
-    "homepage": "https://pro.cryptohunt.ai"
+    "homepage": "https://pro.cryptohunt.ai",
+    "codelink": "https://github.com/mookim-eth/xclaw-skill"
   }
 ---
 
@@ -59,3 +60,5 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 
 ---
 *CryptoHunt Intelligence - Data for Creators.*
+
+Code link: https://github.com/mookim-eth/xclaw-skill
