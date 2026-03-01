@@ -71,6 +71,94 @@ function requireArg(value, message) {
     return String(value).trim();
 }
 
+function pickFirst(...values) {
+    for (const v of values) {
+        if (v !== undefined && v !== null && String(v).trim() !== '') return v;
+    }
+    return null;
+}
+
+function normalizeSocialAction(action) {
+    const a = action || {};
+    const target = a.target || a.user || a.profile || {};
+
+    const targetId = pickFirst(
+        a.target_user_id, a.followed_user_id, a.unfollowed_user_id, a.to_user_id,
+        target.id, target.user_id, a.user_id, a.uid, a.id
+    );
+
+    const targetHandle = pickFirst(
+        a.target_handle, a.handle, a.username, a.screen_name,
+        target.handle, target.username, target.screen_name
+    );
+
+    const targetName = pickFirst(
+        a.target_name, a.name, a.nickname,
+        target.name, target.nickname
+    );
+
+    return {
+        ...a,
+        target_id: targetId,
+        target_handle: targetHandle,
+        target_name: targetName
+    };
+}
+
+async function fetchProfileById(userId) {
+    const id = String(userId || '').trim();
+    if (!id) return null;
+
+    const attempts = [
+        ['/user/profile', { user_id: id }],
+        ['/user/profile', { id }],
+        ['/user/profile_by_id', { user_id: id }],
+        ['/user/profile_by_id', { id }],
+        ['/user/profile_detail', { user_id: id }]
+    ];
+
+    for (const [path, payload] of attempts) {
+        try {
+            const res = await requestXClaw(path, 'POST', payload);
+            const root = (res && (res.data || res.profile || res.user)) || res;
+            if (!root || typeof root !== 'object') continue;
+
+            const handle = pickFirst(root.handle, root.username, root.screen_name, root.userName);
+            const name = pickFirst(root.name, root.nickname, root.display_name, root.full_name);
+            const resolvedId = pickFirst(root.id, root.user_id, id);
+
+            if (handle || name) {
+                return { id: resolvedId, handle, name };
+            }
+        } catch (_) {
+            // try next candidate endpoint
+        }
+    }
+
+    return null;
+}
+
+async function enrichSocialActions(actions) {
+    const list = Array.isArray(actions) ? actions : [];
+    const normalized = list.map(normalizeSocialAction);
+    const cache = new Map();
+
+    const idsToResolve = [...new Set(normalized.map(x => x.target_id).filter(Boolean))];
+    await Promise.all(idsToResolve.map(async (id) => {
+        const profile = await fetchProfileById(id);
+        if (profile) cache.set(String(id), profile);
+    }));
+
+    return normalized.map(item => {
+        const profile = item.target_id ? cache.get(String(item.target_id)) : null;
+        return {
+            ...item,
+            target_handle: item.target_handle || (profile ? profile.handle : null),
+            target_name: item.target_name || (profile ? profile.name : null)
+        };
+    });
+}
+
 async function main() {
     const args = process.argv.slice(2);
     const command = (args[0] || '').toLowerCase();
@@ -129,11 +217,19 @@ async function main() {
                 console.log(`[XClaw] Checking social pulse (follows/unfollows) for @${handle}...`);
                 const follows = await requestXClaw('/social/follow_relation', 'POST', { handle });
                 const unfollows = await requestXClaw('/social/unfollow_relation', 'POST', { handle });
-                
+
+                const followActions = follows.followed_action || follows.data || [];
+                const unfollowActions = unfollows.unfollowing_action || unfollows.data || [];
+
+                const [recentFollowing, recentUnfollowing] = await Promise.all([
+                    enrichSocialActions(followActions),
+                    enrichSocialActions(unfollowActions)
+                ]);
+
                 console.log(JSON.stringify({ 
-                    info: `Social actions for @${handle}`, 
-                    recent_following: follows.followed_action || follows.data || [],
-                    recent_unfollowing: unfollows.unfollowing_action || unfollows.data || []
+                    info: `Social actions for @${handle}`,
+                    recent_following: recentFollowing,
+                    recent_unfollowing: recentUnfollowing
                 }, null, 2));
                 break;
             }
