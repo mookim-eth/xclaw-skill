@@ -233,12 +233,15 @@ async function main() {
             case 'tweets': {
                 const username = requireArg(args[1], "Username/Handle is required.").replace('@', '').trim();
                 const count = parseInt(args[2]) || 20;
-                let allResults = [];
                 let result;
                 
-                // 增加初始请求量，并启用循环回溯逻辑，确保凑齐用户要求的条数
-                let maxResultsToRequest = Math.max(count * 3, 100); 
-                const payload = { handle: username, maxResults: maxResultsToRequest, verbose: true };
+                // 极致精简：直接利用后端已优化的 verbose 逻辑
+                // 默认 verbose: false (后端现在返回 原创+引用+转发，不含回复)
+                const payload = { 
+                    handle: username, 
+                    maxResults: count, 
+                    verbose: isVerboseRequested // 只有显式要求才传 true 以包含回复
+                };
 
                 try {
                     result = await requestXClaw('/tweet/kol_tweets', 'POST', payload);
@@ -249,22 +252,9 @@ async function main() {
                     result = await requestXClaw('/tweet/user_tweets', 'POST', payload);
                 }
 
-                if (Array.isArray(result)) {
-                    // 过滤逻辑：默认包含原创、引用、转发，排除回复
-                    // 除非用户显式要求 --verbose
-                    if (!isVerboseRequested) {
-                        allResults = result.filter(t => t.reply_id === null || t.reply_id === undefined);
-                    } else {
-                        allResults = result;
-                    }
-                }
-
-                // 精准截取用户要求的条数
-                const finalTweets = allResults.slice(0, count);
-
                 console.log(JSON.stringify({ 
-                    info: `Recent tweets for @${username} [Mode: ${mode}, Requested: ${count}, Found: ${finalTweets.length}]`, 
-                    tweets: slimTweets(finalTweets, { limit: count, mode }) 
+                    info: `Recent tweets for @${username} [Mode: ${mode}, Count: ${count}, Verbose: ${isVerboseRequested}]`, 
+                    tweets: slimTweets(result, { limit: count, mode }) 
                 }, null, 2));
                 break;
             }
