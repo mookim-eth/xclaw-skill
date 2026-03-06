@@ -200,25 +200,24 @@ async function enrichSocialActions(actions, usersMap = {}, options = {}) {
 }
 
 async function main() {
-    const args = process.argv.slice(2);
+    let args = process.argv.slice(2);
     const command = (args[0] || '').toLowerCase();
     const normalizedCommand = (command === 'analyze' || command === 'crawl') ? 'tweets' : command;
 
-    // 模式识别逻辑
+    // --- 修复参数解析 Bug：全局提取标记位 ---
     const isFullMode = args.includes('--full');
     const isVerboseRequested = args.includes('--verbose');
-    
-    // 董事长最新指示：默认包含 Retweet (但不包含 Reply)
-    // 如果显式要求 --verbose，则开启全量 (Retweet + Reply)
-    const verboseParam = isVerboseRequested ? true : 'retweet_only'; 
     const mode = isFullMode ? 'full' : 'slim';
+
+    // 过滤掉标记位，保留纯净的位置参数
+    args = args.filter(arg => arg !== '--full' && arg !== '--verbose');
 
     try {
         switch (normalizedCommand) {
             case 'hot': {
                 const hours = parseInt(args[1]) || 24;
                 const group = args[2] || 'cn';
-                const tag = args[3] || null;
+                const tag = args[3] || null; // 此时 args[3] 已经是真正的 tag，不再是 --full
                 const payload = { hours, group };
                 if (tag) payload.tag = tag;
                 const rawData = await requestXClaw('/tweet/hot_tweets', 'POST', payload);
