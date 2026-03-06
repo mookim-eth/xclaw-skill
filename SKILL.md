@@ -25,9 +25,14 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 - **Action**: Fetch the top performing tweets in the last 1/4/24 hours.
 - **Multi-Dimensional Filtering**: Support for region (`cn`/`global`) and tags (e.g., `AI`, `meme`).
 
-### 2. Recent Slim Tweets (`xclaw_tweets`)
-- **Action**: Fetches latest 15-20 tweets and performs data slimming (slimTweets) for efficient reading.
-- **Compatibility**: Legacy aliases `xclaw_analyze` / `xclaw_crawl` are kept as redirects to this capability.
+### 2. Recent Tweets (`xclaw_tweets`)
+- **Action**: Fetches latest tweets with intelligent filtering. 
+- **Default**: Includes Original + Quote + Retweets, excludes Replies. (Slim mode by default).
+- **Options**:
+  - Use `--full` to include raw text and HTML content.
+  - Use `--verbose` to include reply tweets.
+- **Count**: Specify number of tweets (e.g., `xclaw tweets elonmusk 20`). 
+- **Compatibility**: Legacy aliases `xclaw_analyze` / `xclaw_crawl` are supported.
 
 ### 3. Ghost Analysis (`xclaw_ghost`)
 - **Action**: Sniff out tweets that have been **deleted** by a specific user.
