@@ -4,20 +4,20 @@ description: XClaw Intelligence Skill. Provides real-time trending tweets, KOL d
 allowed-tools: Bash(node:*) Read Write
 metadata:
   {
-    "openclaw": { "requires": { "env": ["CRYPTOHUNT_API_KEY"] } },
-    "homepage": "https://pro.cryptohunt.ai",
+    "openclaw": { "requires": { "env": ["XCLAW_API_KEY"] } },
+    "homepage": "https://pro.xclaw.info",
     "codelink": "https://github.com/mookim-eth/xclaw-skill"
   }
 ---
 
 # Skill: XClaw Intelligence 🚀
 
-XClaw is the premier intelligence layer for OpenClaw creators, providing real-time social data and insights from the CryptoHunt engine.
+XClaw is the premier intelligence layer for OpenClaw creators, providing real-time social data and insights from the XClaw engine.
 
 ## Prerequisites
-- **API Key Required**: Set `CRYPTOHUNT_API_KEY` in your environment.
-- **Get your Key**: Purchase or register for an API key at [apidashboard.cryptohunt.ai](https://apidashboard.cryptohunt.ai).
-- **Official API Docs**: Detailed endpoint documentation can be found at [pro.cryptohunt.ai](https://pro.cryptohunt.ai).
+- **API Key Required**: Set `XCLAW_API_KEY` in your environment.
+- **Get your Key**: Purchase or register for an API key at [apidashboard.xclaw.info](https://apidashboard.xclaw.info).
+- **Official API Docs**: Detailed endpoint documentation can be found at [pro.xclaw.info](https://pro.xclaw.info).
 
 ## Core Capabilities
 
@@ -64,6 +64,6 @@ XClaw is the premier intelligence layer for OpenClaw creators, providing real-ti
 - "xclaw draft": Automatically fetch viral hooks and suggest 3 tweet versions.
 
 ---
-*CryptoHunt Intelligence - Data for Creators.*
+*XClaw Intelligence - Data for Creators.*
 
 Code link: https://github.com/mookim-eth/xclaw-skill

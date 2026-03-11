@@ -1,12 +1,12 @@
 
 const http = require('https');
 
-const API_KEY = process.env.CRYPTOHUNT_API_KEY;
-const BASE_URL = 'pro.cryptohunt.ai';
+const API_KEY = process.env.XCLAW_API_KEY || process.env.CRYPTOHUNT_API_KEY;
+const BASE_URL = 'pro.xclaw.info';
 const DEBUG = process.env.XCLAW_DEBUG === '1';
 
 if (!API_KEY) {
-    console.error("Error: CRYPTOHUNT_API_KEY environment variable is missing.");
+    console.error("Error: XCLAW_API_KEY environment variable is missing.");
     process.exit(1);
 }
 
@@ -244,11 +244,24 @@ async function main() {
 
                 try {
                     result = await requestXClaw('/tweet/kol_tweets', 'POST', payload);
+                    // 如果后端返回 "User is not a tracking KOL" 或其他非数组错误信息，手动抛出异常以触发 fallback
+                    if (!Array.isArray(result)) {
+                        throw new Error("Not a tracking KOL, switch to fallback");
+                    }
                 } catch (e) {
-                    const profile = await requestXClaw('/user/profile_by_handle', 'POST', { handle: username });
-                    payload.user_id = profile.id;
-                    delete payload.handle;
-                    result = await requestXClaw('/tweet/user_tweets', 'POST', payload);
+                    try {
+                        const profile = await requestXClaw('/user/profile_by_handle', 'POST', { handle: username });
+                        if (!profile || !profile.id) throw new Error("User not found");
+                        
+                        payload.user_id = profile.id;
+                        delete payload.handle;
+                        const fallbackResult = await requestXClaw('/tweet/user_tweets', 'POST', payload);
+                        // 修复：user_tweets 返回的是对象 { tweets: [...], next: ... }
+                        result = (fallbackResult && fallbackResult.tweets) ? fallbackResult.tweets : fallbackResult;
+                    } catch (fallbackError) {
+                        console.error("Fallback failed:", fallbackError.message);
+                        result = [];
+                    }
                 }
 
                 console.log(JSON.stringify({ 
@@ -306,7 +319,7 @@ async function main() {
                 
                 // 并发请求：基础 Rank 数据 + 独立灵魂指数
                 const [rankResult, soulResult] = await Promise.all([
-                    requestXClaw('/data/cryptohunt', 'POST', { handle }),
+                    requestXClaw('/data/xclaw', 'POST', { handle }),
                     requestXClaw('/ai/soul_index', 'POST', { handle })
                 ]);
                 
