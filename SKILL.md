@@ -15,7 +15,7 @@ metadata:
 XClaw is the premier intelligence layer for OpenClaw creators, providing real-time social data and insights from the XClaw engine.
 
 ## Prerequisites
-- **API Key Required**: Set `XCLAW_API_KEY` in your environment.
+- **API Key Required**: Set `XCLAW_API_KEY` in your environment. (**Note**: `CRYPTOHUNT_API_KEY` is supported as a **legacy** option but will be **retired soon**. Please migrate to `XCLAW_API_KEY` as soon as possible.)
 - **Get your Key**: Visit [apidashboard.xclaw.info](https://apidashboard.xclaw.info) and **login with Twitter** to claim **50 free credits**.
 - **Official API Docs**: Detailed endpoint documentation can be found at [pro.xclaw.info](https://pro.xclaw.info).
 - **Stay Updated**: Follow our Twitter **[@xclawlab](https://x.com/xclawlab)** for the latest updates.
