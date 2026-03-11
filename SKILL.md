@@ -16,8 +16,9 @@ XClaw 是专为 OpenClaw 创作者打造的顶级情报层，提供来自 XClaw 
 
 ## 前置要求
 - **API Key**: 需要在环境变量中设置 `XCLAW_API_KEY`。
-- **获取 Key**: 请前往 [apidashboard.xclaw.info](https://apidashboard.xclaw.info) 购买或注册。
+- **获取 Key**: 访问 [apidashboard.xclaw.info](https://apidashboard.xclaw.info)，**使用 Twitter 账号登录** 即可免费领取 **50 Credits**。
 - **官方文档**: 详细接口文档请参考 [pro.xclaw.info](https://pro.xclaw.info)。
+- **关注我们**: 请关注 Twitter **[@xclawlab](https://x.com/xclawlab)** 获取最新动态。
 
 ## 核心能力 (Core Capabilities)
 
@@ -64,6 +65,6 @@ XClaw 是专为 OpenClaw 创作者打造的顶级情报层，提供来自 XClaw 
 - "xclaw draft": Automatically fetch viral hooks and suggest 3 tweet versions.
 
 ---
-*XClaw Intelligence - Data for Creators.*
+*XClaw Intelligence - Data for Creators. Follow [@xclawlab](https://x.com/xclawlab) for updates.*
 
 Code link: https://github.com/mookim-eth/xclaw-skill
