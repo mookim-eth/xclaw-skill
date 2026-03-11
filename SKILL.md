@@ -4,7 +4,7 @@ description: XClaw Intelligence Skill. Provides real-time trending tweets, KOL d
 allowed-tools: Bash(node:*) Read Write
 metadata:
   {
-    "openclaw": { "requires": { "env": ["XCLAW_API_KEY"] } },
+    "openclaw": { "requires": { "env": ["XCLAW_API_KEY", "CRYPTOHUNT_API_KEY"] } },
     "homepage": "https://pro.xclaw.info",
     "codelink": "https://github.com/mookim-eth/xclaw-skill"
   }
