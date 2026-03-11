@@ -1,6 +1,6 @@
 ---
 name: xclaw
-description: XClaw Intelligence Skill. Provides real-time trending tweets, KOL deep analysis, live user crawling, profile history, and social relation tracking.
+description: XClaw Intelligence 技能库。提供实时推文热点、KOL 深度分析、实时抓取、历史足迹及社交关系追踪。
 allowed-tools: Bash(node:*) Read Write
 metadata:
   {
@@ -12,14 +12,14 @@ metadata:
 
 # Skill: XClaw Intelligence 🚀
 
-XClaw is the premier intelligence layer for OpenClaw creators, providing real-time social data and insights from the XClaw engine.
+XClaw 是专为 OpenClaw 创作者打造的顶级情报层，提供来自 XClaw 引擎的实时社交数据与深度洞察。
 
-## Prerequisites
-- **API Key Required**: Set `XCLAW_API_KEY` in your environment.
-- **Get your Key**: Purchase or register for an API key at [apidashboard.xclaw.info](https://apidashboard.xclaw.info).
-- **Official API Docs**: Detailed endpoint documentation can be found at [pro.xclaw.info](https://pro.xclaw.info).
+## 前置要求
+- **API Key**: 需要在环境变量中设置 `XCLAW_API_KEY`。
+- **获取 Key**: 请前往 [apidashboard.xclaw.info](https://apidashboard.xclaw.info) 购买或注册。
+- **官方文档**: 详细接口文档请参考 [pro.xclaw.info](https://pro.xclaw.info)。
 
-## Core Capabilities
+## 核心能力 (Core Capabilities)
 
 ### 1. Trending Discovery (`xclaw_hot`)
 - **Action**: Fetch the top performing tweets in the last 1/4/24 hours.
