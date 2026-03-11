@@ -1,9 +1,9 @@
 
 const http = require('https');
 
-const API_KEY = process.env.XCLAW_API_KEY || process.env.CRYPTOHUNT_API_KEY;
+const API_KEY = process.env.XCLAW_API_KEY;
 const BASE_URL = 'pro.xclaw.info';
-const DEBUG = process.env.XCLAW_DEBUG === '1';
+const DEBUG = false;
 
 if (!API_KEY) {
     console.error("Error: XCLAW_API_KEY environment variable is missing.");
